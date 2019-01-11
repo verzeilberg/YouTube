@@ -73,9 +73,12 @@ class youTubeService implements youTubeServiceInterface {
             if (isset($res1[1])) {
                 $res[1] = $res1[0];
             }
+
+            $id = substr($res[1], 0, 12);
+        } else {
+            $id = array_pop(explode('/', $sUrl));
         }
-        return substr($res[1], 0, 12);
-        return false;
+        return $id;
     }
 
     public function removeYouTubeVideo($YouTubeVideo = NULL) {
@@ -93,16 +96,16 @@ class youTubeService implements youTubeServiceInterface {
      * @param string $sUrl
      */
     public function getYouTubeDataFromVideo($sUrl) {
-        $succes = true;
         //First get you tube video ID an put in a variable
         $sYouTubeId = $this->youtubeID($sUrl);
+
         //Get you tube data from uploaded you tube link, snippet, contentDetails, 
-        $dataContentDetails = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=id%2C+contentDetails&id=' . $sYouTubeId . '&key=AIzaSyCpkho1lm-jC0YFZNu3G-Af2UH_GYWE5j4'));
-        $dataSnippet = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=id%2C+snippet&id=' . $sYouTubeId . '&key=AIzaSyCpkho1lm-jC0YFZNu3G-Af2UH_GYWE5j4'));
+        $dataContentDetails = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=id%2C+contentDetails&id=' . $sYouTubeId . '&key=AIzaSyBd0ib8T5YC8FG_zRH-IxOA8blnLvqJ1xM'));
+        $dataSnippet = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $sYouTubeId . '&key=AIzaSyBd0ib8T5YC8FG_zRH-IxOA8blnLvqJ1xM'), true);
 
         //Video details
-        $title = $dataSnippet->items[0]->snippet->title;
-        $description = $dataSnippet->items[0]->snippet->description;
+        $title = $dataSnippet["items"][0]["snippet"]["title"];
+        $description = $dataSnippet["items"][0]["snippet"]["description"];
         $duration = $dataContentDetails->items[0]->contentDetails->duration;
         //Create YouTube object
         $youTubeVideo = $this->createYouTube();
@@ -112,12 +115,12 @@ class youTubeService implements youTubeServiceInterface {
         $youTubeVideo->setDescription($description);
 
 
-        $this->storeYouTube($youTubeVideo);
-        if (count($dataSnippet->items[0]->snippet->thumbnails) > 0) {
-            foreach ($dataSnippet->items[0]->snippet->thumbnails AS $index => $thumbnail) {
-                $url = $thumbnail->url;
-                $width = $thumbnail->width;
-                $height = $thumbnail->height;
+        $thumbnails = $dataSnippet["items"][0]["snippet"]["thumbnails"];
+        if (count($thumbnails) > 0) {
+            foreach ($thumbnails AS $index => $thumbnail) {
+                $url = $thumbnail['url'];
+                $width = $thumbnail['width'];
+                $height = $thumbnail['height'];
 
                 $youTubeVideoImages = $this->createYouTubeImage();
                 $youTubeVideoImages->setType($index);
@@ -129,13 +132,12 @@ class youTubeService implements youTubeServiceInterface {
                 $youTubeVideo->addYouTubeImages($youTubeVideoImages);
                 
             }
-
-           $this->storeYouTube($youTubeVideo); 
-
-            return $youTubeVideo;
-        } else {
-            return $succes;
         }
+
+        $this->storeYouTube($youTubeVideo);
+
+        return $youTubeVideo;
+
     }
 
     /**

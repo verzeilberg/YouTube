@@ -1,0 +1,9 @@
+/* You Tube */
+
+span.removeYouTubeVideo {
+    cursor:pointer;
+}
+
+div.youTubeFrame {
+    cursor: pointer;
+}
