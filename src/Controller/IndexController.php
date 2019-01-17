@@ -87,7 +87,8 @@ class IndexController extends AbstractActionController
                 $youTubeData['title'] = $youTubeVideo->getTitle();
                 $youTubeData['description'] = nl2br($youTubeVideo->getDescription());
                 $youTubeData['youTubeId'] = $youTubeVideo->getYouTubeId();
-                $youTubeData['duration'] = $youTubeVideo->getDuration();
+                $interval = new \DateInterval($youTubeVideo->getDuration());
+                $youTubeData['duration'] = $interval->format('%I:%S');
             }
         }
 
