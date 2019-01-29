@@ -67,4 +67,7 @@ return [
             ],
         ],
     ],
+    'youtube_credentials' => [
+        'consumer_key' => ''
+    ],
 ];

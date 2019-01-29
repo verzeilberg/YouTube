@@ -15,7 +15,8 @@ class IndexControllerFactory implements FactoryInterface
     {   
         
         $entityManager = $container->get('doctrine.entitymanager.orm_default');
-        $youTubeService = new youTubeService($entityManager);
+        $config = $container->get('config');
+        $youTubeService = new youTubeService($entityManager, $config);
         return new IndexController($entityManager, $youTubeService);
     }
 }

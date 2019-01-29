@@ -12,13 +12,12 @@ use YouTube\Entity\YouTubeImages;
 
 class youTubeService implements youTubeServiceInterface {
 
-    /**
-     * @var \Blog\Service\PostServiceInterface
-     */
     protected $em;
+    protected $config;
 
-    public function __construct($em) {
+    public function __construct($em, $config) {
         $this->em = $em;
+        $this->config = $config;
     }
 
     /**
@@ -98,10 +97,11 @@ class youTubeService implements youTubeServiceInterface {
     public function getYouTubeDataFromVideo($sUrl) {
         //First get you tube video ID an put in a variable
         $sYouTubeId = $this->youtubeID($sUrl);
+        $key = $this->config['youtube_credentials']['consumer_key'];
 
-        //Get you tube data from uploaded you tube link, snippet, contentDetails, 
-        $dataContentDetails = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=id%2C+contentDetails&id=' . $sYouTubeId . '&key=AIzaSyBd0ib8T5YC8FG_zRH-IxOA8blnLvqJ1xM'));
-        $dataSnippet = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $sYouTubeId . '&key=AIzaSyBd0ib8T5YC8FG_zRH-IxOA8blnLvqJ1xM'), true);
+        //Get you tube data from uploaded you tube link, snippet, contentDetails,
+        $dataContentDetails = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=id%2C+contentDetails&id=' . $sYouTubeId . '&key=' . $key));
+        $dataSnippet = json_decode(@file_get_contents('https://www.googleapis.com/youtube/v3/videos?part=snippet&id=' . $sYouTubeId . '&key=' . $key), true);
 
         //Video details
         $title = $dataSnippet["items"][0]["snippet"]["title"];
