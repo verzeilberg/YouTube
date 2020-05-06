@@ -2,7 +2,7 @@
 
 namespace YouTube\Service;
 
-use Zend\ServiceManager\ServiceLocatorInterface;
+use Laminas\ServiceManager\ServiceLocatorInterface;
 
 /*
  * Entities

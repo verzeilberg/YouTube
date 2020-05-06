@@ -2,11 +2,11 @@
 
 namespace YouTube\Controller;
 
-use Zend\Mvc\Controller\AbstractActionController;
-use Zend\View\Model\ViewModel;
-use Zend\View\Model\JsonModel;
-use Zend\Authentication\Result;
-use Zend\Uri\Uri;
+use Laminas\Mvc\Controller\AbstractActionController;
+use Laminas\View\Model\ViewModel;
+use Laminas\View\Model\JsonModel;
+use Laminas\Authentication\Result;
+use Laminas\Uri\Uri;
 
 /**
  * This controller is responsible for letting the user to log in and log out.
